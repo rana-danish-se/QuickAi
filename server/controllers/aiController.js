@@ -5,6 +5,8 @@ import axios from 'axios';
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import pdf from 'pdf-parse/lib/pdf-parse.js';
+
+
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
   baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
@@ -12,6 +14,7 @@ const AI = new OpenAI({
 
 export const generateArticle = async (req, res) => {
   try {
+    console.log("Api hit")
     const { userId } = req.auth();
     const { prompt, length } = req.body;
     const plan = req.plan;
@@ -23,6 +26,8 @@ export const generateArticle = async (req, res) => {
         message: 'Limit reached. Updgrade to continue.',
       });
     }
+
+
     const response = await AI.chat.completions.create({
       model: 'gemini-2.0-flash',
       messages: [
@@ -36,6 +41,9 @@ export const generateArticle = async (req, res) => {
     });
     const content =
       response.choices?.[0]?.message?.content || 'No content returned.';
+
+
+
     await sql`INSERT INTO creations(user_id,prompt,content,type) VALUES(${userId},${prompt},${content},'article')`;
 
     if (plan !== 'premium') {
@@ -45,10 +53,12 @@ export const generateArticle = async (req, res) => {
         },
       });
     }
+
     res.json({
       success: true,
       content,
     });
+    
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
@@ -57,6 +67,7 @@ export const generateArticle = async (req, res) => {
 
 export const generateBlogTitle = async (req, res) => {
   try {
+    console.log("Title")
     const { userId } = req.auth();
     const { prompt } = req.body;
     const plan = req.plan;
@@ -93,6 +104,7 @@ export const generateBlogTitle = async (req, res) => {
       success: true,
       content,
     });
+    console.log("data sent successfully",content)
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
@@ -149,9 +161,10 @@ export const removeImageBackground = async (req, res) => {
   try {
     console.log('Request received');
     const { userId } = req.auth();
-    const { image } = req.file;
+    const  image  = req.file;
     const plan = req.plan;
 
+    console.log(plan)
     if (plan != 'premium') {
       return res.json({
         success: false,
@@ -185,7 +198,7 @@ export const removeImageObject = async (req, res) => {
     console.log('Request received');
     const { userId } = req.auth();
     const { object } = req.body;
-    const { image } = req.file;
+    const image  = req.file;
     const plan = req.plan;
 
     if (plan != 'premium') {
