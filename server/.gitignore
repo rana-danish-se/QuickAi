@@ -1,41 +1,25 @@
-# Ignore node modules
-node_modules/
-
-# Ignore environment variables
-.env
-
-# Ignore log files
+# Logs
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Ignore OS-specific files
+node_modules
+dist
+dist-ssr
+*.local
+.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
-
-# Ignore build artifacts
-dist/
-build/
-
-# Ignore uploads (if stored locally)
-uploads/
-
-# Ignore coverage reports
-coverage/
-
-# Ignore local database files (if any)
-*.sqlite
-*.db
-
-# Ignore IDE settings
-.vscode/
-.idea/
-
-# Ignore temporary files
-*.swp
-*.tmp
-
-# Ignore lock files (optional, if using yarn or npm consistently)
-# yarn.lock
-# package-lock.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
